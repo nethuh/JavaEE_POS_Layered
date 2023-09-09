@@ -91,3 +91,32 @@ function loadItems() {
 }
 
 loadItemIds();
+
+
+$("#btnAddToCart").click(function () {
+    let itemCode = $("#itID").val();
+    let itemDescription = $("#itName").val();
+    let itemPrice = $("#itPrice").val();
+    let itemQty = $("#itQty").val();
+
+    let cartItemsRow = [];
+
+    let total = itemPrice * itemQty;
+
+    cartItemsRow.push(itemCode, itemDescription, itemPrice, itemQty, total);
+
+    let text = "Successfully Added..!";
+
+    if (confirm(text) == true) {
+        let row = `<tr>
+                <td>${itemCode}</td>
+                <td>${itemDescription}</td>
+                <td>${itemPrice}</td>
+                <td>${itemQty}</td>
+                <td>${total}</td>
+            </tr>`;
+
+        $("#tblCart").append(row);
+    }
+});
+
