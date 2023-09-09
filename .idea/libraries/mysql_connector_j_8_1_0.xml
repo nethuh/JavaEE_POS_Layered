@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="mysql-connector-j-8.1.0">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/mysql-connector-j-8.1.0.jar!/" />
+      <root url="file://$PROJECT_DIR$/lib/json-p" />
+      <root url="file://$PROJECT_DIR$/lib/dbcp" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+    <jarDirectory url="file://$PROJECT_DIR$/lib/dbcp" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/lib/json-p" recursive="false" />
+  </library>
+</component>

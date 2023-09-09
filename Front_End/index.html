@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>POS</title>
+
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+
+
+
+</head>
+<body>
+<!------------header------------->
+
+<!--Header-->
+<header id="headerSection">
+    <nav class="navbar navbar-expand-lg" style="background: #d60f0f;">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold text-dark" href="#">
+                <img src="assets/img/cart%20logo.png" alt="Bootstrap" width="40" height="40"> POS System
+            </a>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active text-white" id="homeBtn" aria-current="page" href="#headerSection">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" id="customerBtn" href="#customerSection">Customer</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" id="itemBtn" href=#storeSection>Store</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" id="placeOrderBtn" href="#placeOrderSection">Order</a>
+                    </li>
+                </ul>
+                <form class="d-flex" role="search">
+                    <!--          <input id="customerSearchTxt" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">-->
+                    <!--          <button id="Search-btn" class="btn btn-outline-light" type="Button">Search</button>-->
+                </form>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<!-- dashboard section-->
+<section class="container" id="dashBoardSection">
+
+    <h1 class="p-5"> Welcome to POS System</h1>
+
+    <!-- card selector menu -->
+    <div class="row g-5">
+
+        <!-- card 1 -->
+        <div class="col-12 col-lg-4 d-flex justify-content-center mb-3">
+            <div class="card" style="width: 18rem;">
+                <img src="./assets/img/Cust.png" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">Manage Customers</h5>
+                    <p class="card-text">Options for handling customer details</p>
+                    <a href="#http://localhost:63342/MyPortfolio/Assignment/JS/InMemory-POS/index.html?_ijt=dpoo81d3b6or8i443dce3r2sh#customerSection" class="btn btn-primary">Click Here</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- card 2-->
+        <div class="col-12 col-lg-4 d-flex justify-content-center mb-3">
+            <div class="card" style="width: 18rem;">
+                <img src="./assets/img/Store.png" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">Manage Items</h5>
+                    <p class="card-text">Options for manage the store details</p>
+                    <a href="#http://localhost:63342/MyPortfolio/Assignment/JS/InMemory-POS/index.html?_ijt=dpoo81d3b6or8i443dce3r2sh&#storeSection" class="btn btn-primary">Click Here</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- card 3 -->
+        <div class="col-12 col-lg-4 d-flex justify-content-center mb-3">
+            <div class="card" style="width: 18rem;">
+                <img src="./assets/img/Cart.png" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">Purchase Order</h5>
+                    <p class="card-text">Option for Place Order and Make Payment</p>
+                    <a href="#http://localhost:63342/MyPortfolio/Assignment/JS/InMemory-POS/index.html?_ijt=dpoo81d3b6or8i443dce3r2sh#placeOrderSection" class="btn btn-primary">Click Here</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!--Manage Customers-->
+
+<main class="justify-content-center mt-4 align-content-center" id="customerSection">
+    <section class="row col-12">
+        <section id="customerDisplaySection" class="col-9 mx-0 my-4">
+            <section id="customerFormNameAndSearch" class="mx-4">
+                <nav class="navbar bg-light  ">
+                    <div class="container-fluid">
+                        <a class="navbar-brand">Manage Customer</a>
+                        <form class="d-flex" role="search">
+
+                            <!-- Example single danger button -->
+                            <div class="btn-group mx-2">
+                                <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" style="background: #d60f0f;">
+                                    ID
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="#">ID</a></li>
+                                    <li><a class="dropdown-item" href="#">Name</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="#">Separated link</a></li>
+                                </ul>
+                            </div>
+                            <input class="form-control me-2" id="customerSearchTxt" type="search" placeholder="Search" aria-label="Search" >
+                            <button class="btn btn-outline-danger me-2" id="customerSearch-btn" type="Button">Search</button>
+                        </form>
+                    </div>
+                </nav>
+            </section>
+
+            <section id="customerTable" class="mx-4">
+                <table class="table my-4">
+                    <thead class="table-dark">
+                    <tr id="CustomerTableHeader">
+                        <th scope="col">ID</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Address</th>
+                        <th scope="col">Salary</th>
+                    </tr>
+                    </thead>
+                    <tbody id="tblCustomer">
+                    </tbody>
+                </table>
+            </section>
+        </section>
+
+        <section id="customerInputSection" class="col-3 justify-content-center my-4 ">
+            <section class="col-12 card">
+                <div class="badge bg-warning text-wrap fs-5 fw-semibold p-4">
+                    Input Details
+                </div>
+
+                <form id="item-form px-1" >
+                    <div class="m-3">
+                        <label for="txtCustID" class="form-label">Customer ID</label>
+                        <input type="text" class="form-control "  id="txtCustID">
+                    </div>
+                    <div class="m-3">
+                        <label for="txtCustName" class="form-label">Customer Name</label>
+                        <input type="text" class="form-control"  id="txtCustName" >
+                    </div>
+                    <div class="m-3">
+                        <label for="txtCustAddress" class="form-label">Customer address</label>
+                        <input type="text" class="form-control" id="txtCustAddress" >
+                    </div>
+                    <div class="m-3">
+                        <label for="txtCustSalary" class="form-label">Customer Salary</label>
+                        <input type="text" class="form-control"  id="txtCustSalary" >
+                    </div>
+
+                    <div class="m-3 justify-content-center">
+                        <div style="display: inline-block" class="me-2">
+                            <button id="customerSave-btn" type="button" class="btn btn-success">Save</button>
+                        </div>
+                        <div style="display: inline-block" class="me-2">
+                            <button id="customerUpdated-btn" type="button" class="btn btn-primary">Update</button>
+                        </div>
+                        <div style="display: inline-block" class="me-2">
+                            <button id="customerDelete-btn" type="button" class="btn btn-danger">Delete</button>
+                        </div>
+                        <div style="display: inline-block" class="me-2">
+                            <button id="customerClear-btn" type="button" class="btn btn-warning">Clear</button>
+                        </div>
+                        <div style="display: inline-block">
+                            <button id="customerGetAll-btn" type="button" class="btn btn-secondary">Get All</button>
+                        </div>
+                    </div>
+
+                </form>
+            </section>
+        </section>
+    </section>
+</main>
+
+
+<!--Manage Store-->
+
+<main class="justify-content-center mt-4 align-content-center" id="storeSection">
+    <section class="row col-12">
+        <section id="itemDisplaySection" class="col-9 mx-0 my-4">
+            <section id="itemFormNameAndSearch" class="mx-4">
+                <nav class="navbar bg-light  ">
+                    <div class="container-fluid">
+                        <a class="navbar-brand">Manage Store</a>
+                        <form class="d-flex" role="search">
+
+                            <!-- Example single danger button -->
+                            <div class="btn-group mx-2">
+                                <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"style="background: #d60f0f;">
+                                    Code
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="#">Code</a></li>
+                                    <li><a class="dropdown-item" href="#">Name</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="#">Separated link</a></li>
+                                </ul>
+                            </div>
+                            <input class="form-control me-2" id="itemSearchTxt" type="search" placeholder="Search" aria-label="Search">
+                            <button class="btn btn-outline-danger me-2" id="itemSearch-btn" type="Button">Search</button>
+                        </form>
+                    </div>
+                </nav>
+            </section>
+
+            <section id="itemTable" class="mx-4">
+                <table class="table my-4">
+                    <thead class="table-dark">
+                    <tr id="tableHeader">
+                        <th scope="col">Code</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Qty On Hand</th>
+                    </tr>
+                    </thead>
+                    <tbody id="tblItem">
+                    </tbody>
+                </table>
+            </section>
+        </section>
+
+        <section id="inputSection" class="col-3 justify-content-center my-4 ">
+            <section class="col-12 card">
+                <div class="badge bg-warning text-wrap fs-5 fw-semibold p-4">
+                    Input Details
+                </div>
+
+                <form id="item-form px-2" >
+                    <div class="m-3">
+                        <label for="txtItemCode" >Item Code</label>
+                        <input type="text" class="form-control "  id="txtItemCode">
+                    </div>
+                    <div class="m-3">
+                        <label for="txtItemName" >Item Name</label>
+                        <input type="text" class="form-control"  id="txtItemName" >
+                    </div>
+                    <div class="m-3">
+                        <label for="txtItemPrice" >Item Price</label>
+                        <input type="text" class="form-control"  id="txtItemPrice" >
+                    </div>
+                    <div class="m-3">
+                        <label for="txtItemQty">Item Quantity on Hand</label>
+                        <input type="text" class="form-control"  id="txtItemQTY">
+                    </div>
+
+                    <div class="m-3 justify-content-center">
+                        <div style="display: inline-block" class="me-2">
+                            <button id="itemSave-btn" type="button" class="btn btn-success">Save</button>
+                        </div>
+                        <div style="display: inline-block" class="me-2">
+                            <button id="itemUpdated-btn" type="button" class="btn btn-primary">Update</button>
+                        </div>
+                        <div style="display: inline-block" class="me-2">
+                            <button id="itemDelete-btn" type="button" class="btn btn-danger">Delete</button>
+                        </div>
+                        <div style="display: inline-block" class="me-2">
+                            <button id="itemClear-btn" type="button" class="btn btn-warning">Clear</button>
+                        </div>
+                        <div style="display: inline-block">
+                            <button id="itemGetAll-btn" type="button" class="btn btn-secondary">Get All</button>
+                        </div>
+                    </div>
+
+                </form>
+            </section>
+        </section>
+    </section>
+</main>
+
+
+<!--Place Order Content-->
+<main class="row justify-content-center" id="placeOrderSection">
+    <section class="row justify-content-evenly h-50">
+
+        <!-- invoice content -->
+        <section class="col-10 col-md-5 col-lg-4 p-3 mt-4 bg-white shadow-lg">
+            <h3 class="text-center bg-warning p-2 text-light rounded-3 fs-4">Invoice Details</h3>
+            <div class="row mt-1">
+                <div class="col-12 col-md-6 col-lg-6">
+                    <label for="orderId" class="form-label">Order ID :</label>
+                    <input class="form-control" id="orderId" type="text">
+                </div>
+                <div class="col-12 col-md-6 col-lg-6">
+                    <label for="txtDate" class="form-label">Order Date :</label>
+                    <input class="form-control" id="txtDate" type="date">
+                </div>
+            </div>
+            <div class="row mt-2">
+                <div class="col-12 col-md-6 col-lg-6">
+                    <label for="custIDCMB" class="form-label">Customer ID :</label>
+                    <select aria-label="Default select example" class="form-select" id="custIDCMB">
+                        <option selected disabled>Select Customer</option>
+                        <!--<option value="1">C001</option>
+                        <option value="2">C002</option>
+                        <option value="3">C003</option>
+                        <option value="4">C004</option>-->
+                    </select>
+                </div>
+                <div class="col-12 col-md-6 col-lg-6">
+                    <label for="txtcusName" class="form-label">Name :</label>
+                    <input class="form-control" disabled id="txtcusName" type="text">
+                </div>
+            </div>
+            <div class="row mt-2 mb-2">
+                <div class="col-12 col-md-6 col-lg-6">
+                    <label for="txtcusAddress" class="form-label">Address :</label>
+                    <input class="form-control" disabled id="txtcusAddress" type="text">
+                </div>
+                <div class="col-12 col-md-6 col-lg-6">
+                    <label for="txtcusSalary" class="form-label">Salary :</label>
+                    <input class="form-control" disabled id="txtcusSalary" type="text">
+                </div>
+            </div>
+        </section>
+
+        <!-- select items content -->
+        <section class="col-10 col-md-5 col-lg-4 p-3 mt-4 bg-white shadow-lg">
+            <h3 class="text-center bg-warning p-2 text-light rounded-3 fs-4">Select Items</h3>
+            <div class="row mt-1">
+                <div class="col-12 col-md-6 col-lg-6">
+                    <label for="itemCodeCMB" class="form-label">Item Code :</label>
+                    <select aria-label="Default select example" class="form-select" id="itemCodeCMB">
+                        <option selected disabled>Select Item</option>
+                        <!--<option value="1">I-001</option>
+                        <option value="2">I-002</option>
+                        <option value="3">I-003</option>
+                        <option value="4">I-004</option>-->
+                    </select>
+                </div>
+                <div class="col-12 col-md-6 col-lg-6">
+                    <label for="itName" class="form-label">Item Name :</label>
+                    <input class="form-control" disabled id="itName" type="text">
+                </div>
+            </div>
+            <div class="row mt-2">
+                <div class="col-12 col-md-6 col-lg-6">
+                    <label for="itPrice" class="form-label">Unit Price :</label>
+                    <input class="form-control" disabled id="itPrice" type="text">
+                </div>
+                <div class="col-12 col-md-6 col-lg-6">
+                    <label for="itQty" class="form-label">Qty On Hand :</label>
+                    <input class="form-control" disabled id="itQty" type="text">
+                </div>
+            </div>
+            <div class="row mt-2 mb-4">
+                <div class="col-12 col-md-12 col-lg-12">
+                    <label for="itBuyQty" class="form-label">Ordered Quantity :</label>
+                    <input class="form-control small" id="itBuyQty" type="number" role="spinbutton">
+                </div>
+            </div>
+            <div class="container-fluid justify-content-end d-flex" style="padding: 0;">
+                <button style="width: max-content; height: max-content; font-weight: bold;"
+                        class="btn btn-success text-white"
+                        type="button" id="btnAddToCart">Add To Cart
+                    <i style="padding-left: 4px;" class="fa-solid fa-cart-arrow-down"></i>
+                </button>
+            </div>
+        </section>
+
+        <!--total section-->
+        <section class="col-10 col-md-10 col-lg-3 p-3 mt-4 bg-white shadow-lg" style="height: fit-content;">
+
+            <div class="row mt-1">
+                <div class="col-12 col-md-6 col-lg-6">
+                    <label for="txtCash" class="form-label">Cash (LKR)</label>
+                    <input class="form-control" id="txtCash" type="text">
+                </div>
+                <div class="col-12 col-md-6 col-lg-6">
+                    <label for="txtDiscount" class="form-label">Discount</label>
+                    <input class="form-control" id="txtDiscount" type="text">
+                </div>
+            </div>
+            <div class="row mt-3 mb-4">
+                <div class="col-12 col-md-12 col-lg-12 h-25">
+                    <label for="balance" class="form-label">Balance (LKR)</label>
+                    <input class="form-control" disabled id="balance" type="text">
+                </div>
+            </div>
+
+            <div class="row mt-3 mb-4">
+                <div class="col-12 col-md-12 col-lg-12 h-25">
+                    <label for="subtotal" class="form-label">Sub Total (LKR)</label>
+                    <input class="form-control" disabled id="subtotal" type="text">
+                </div>
+            </div>
+
+            <div class="row mt-3 mb-4">
+                <div class="col-12 col-md-12 col-lg-12 h-25">
+                    <label for="total" class="form-label">Total (LKR)</label>
+                    <input class="form-control" disabled id="total" type="text">
+                </div>
+            </div>
+
+
+            <!--<div class="row">
+                <div class="col-12 col-md-12 col-lg-12">
+                    <h3 class="text-start p-2 text-danger rounded-5" >Sub Total : <span class="text-center text-dark p-2" id="subtotal"> 0.00 LKR </span>
+                    </h3>
+                </div>
+                <div class="col-12 col-md-12 col-lg-12">
+                    <h3 class="text-start p-2 text-danger rounded-5" id="total">Total : <span class="text-center text-dark p-2"> 0.00 LKR </span>
+                    </h3>
+                </div>
+            </div>-->
+
+            <div class="container-fluid justify-content-end d-flex" style="padding: 0;">
+                <button style="font-weight: bold; padding-top: 9px; padding-bottom: 9px;"
+                        class="btn btn-success" type="submit" id="btnPlaceOrder">
+                    Place Order
+                    <i style="padding-left: 5px;" class="fa-solid fa-sack-dollar"></i>
+                </button>
+            </div>
+        </section>
+
+        <!--Cart Details Table-->
+        <section class="d-flex flex-column h-50 col-10 col-xl-11 bg-white shadow-lg align-items-center
+        pt-3 mt-4 table-bordered table-hover table-responsive">
+            <h3 class="text-center bg-warning p-2 text-light rounded-3 col-12 fs-4">Order Details</h3>
+            <div class="row overflow-auto h-60 col-12 col-lg-12 rounded-2 justify-content-around">
+                <table class="table table-striped table-hover mb-4 table-dark" style="height: 20px;">
+                    <thead class="text-white green-hd" >
+                    <tr>
+                        <th>Item Code</th>
+                        <th>Item Name</th>
+                        <th>Unit Price (LKR)</th>
+                        <th>Quantity</th>
+                        <th>Total Cost (LKR)</th>
+                    </tr>
+                    </thead>
+                    <tbody id="tblCart">
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </section>
+</main>
+
+
+<!--Boostrap for javaScript-->
+<script src="assets/js/bootstrap.min.js"></script>
+<!--jQuery for javaScript-->
+<script src="assets/js/jquery-3.7.0.min.js"></script>
+<script src="controllers/Customer.js"></script>
+<script src="controllers/Item.js"></script>
+<script>
+    /*This will only run once, When the DOM is ready for JavaScript code to execute.*/
+$(function () {
+    $('#dashBoardSection').css("display", "block");
+    $('#customerSection').css("display", "none");
+    $('#storeSection').css("display", "none");
+    $('#placeOrderSection').css("display", "none");
+});
+
+/*When the Home button clicked*/
+$('#homeBtn').click(function () {
+    $('#dashBoardSection').css("display", "block");
+    $('#customerSection').css("display", "none");
+    $('#storeSection').css("display", "none");
+    $('#placeOrderSection').css("display", "none");
+});
+
+/*When the Customer button clicked*/
+$('#customerBtn').click(function () {
+    $('#dashBoardSection').css("display", "none");
+    $('#customerSection').css("display", "block");
+    $('#storeSection').css("display", "none");
+    $('#placeOrderSection').css("display", "none");
+});
+
+/*When the Item button clicked*/
+$('#itemBtn').click(function () {
+    $('#dashBoardSection').css("display", "none");
+    $('#customerSection').css("display", "none");
+    $('#storeSection').css("display", "block");
+    $('#placeOrderSection').css("display", "none");
+});
+
+/*When the Place Order button clicked*/
+$('#placeOrderBtn').click(function () {
+    $('#dashBoardSection').css("display", "none");
+    $('#customerSection').css("display", "none");
+    $('#storeSection').css("display", "none");
+    $('#placeOrderSection').css("display", "block");
+});
+</script>
+</body>
+</html>
