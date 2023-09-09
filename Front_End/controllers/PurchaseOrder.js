@@ -118,5 +118,110 @@ $("#btnAddToCart").click(function () {
 
         $("#tblCart").append(row);
     }
-});
 
+    calculateTotal();
+
+
+    $("#itID").val("");
+    $("#itName").val("");
+    $("#itPrice").val("");
+    $("#itQty").val("");
+    $("#itBuyQty").val("");
+
+    $("#orderCustomerID").focus();
+
+    $("#orderCustomerID").val("");
+    $("#txtcusName").val("");
+    $("#txtcusSalary").val("");
+    $("#txtcusAddress").val("");
+
+
+    $("#itID").focus();
+
+    updateQtyOnHandRow(itemCode, itemQty);
+
+});
+function calculateTotal() {
+    let total = 0;
+    $("#tblCart tr td:nth-child(5)").each(function () {
+        total += parseFloat($(this).text());
+    });
+    $("#total").text(total);
+    $("#subtotal").text(total);
+
+    $("#txtCash").on('keyup', function () {
+        var cash = $("#txtCash").val();
+        var total = $("#total").text();
+        var discount = $("#txtDiscount").val();
+        var balance = cash - (total - discount);
+        $("#balance").val(balance);
+    });
+
+    $("#txtDiscount").on('keyup', function () {
+        var cash = $("#txtCash").val();
+        var total = $("#total").text();
+        var discount = $("#txtDiscount").val();
+        var balance = cash - (total - discount);
+        $("#balance").val(balance);
+
+        $("#subtotal").text(total - discount);
+    });
+}
+function updateQtyOnHandRow(code, sellQty) {
+    $.ajax({
+        url: baseUrl + "item?option=search&ItemCode=" + code,
+        method: "GET",
+        success: function (resp) {
+            $("#itQty").val(resp.qty - sellQty);
+        },
+        error: function (ob, statusText, error) {
+            console.error(error);
+        }
+    });
+}
+let orderDetails;
+/*$(document).ready(function () {
+
+
+});*/
+
+
+$("#placeOrderBtn").click(function () {
+    let orderId = $("#orderId").val();
+    let orderDate = $("#txtDate").val();
+    let itemId = $("#itID").val();
+    let customerId = $("#orderCustomerID").val();
+    let qty = $("#itBuyQty").val();
+    let unitPrice = $("#itPrice").val();
+    let cartItems = orderDetails;
+
+    let order = {
+        orderId: orderId,
+        date: orderDate,
+        customer_ID: customerId,
+        ItemCode: itemId,
+        qty: qty,
+        ItemCode: unitPrice,
+        orderDetails: cartItems
+    }
+
+    console.log(order);
+
+    $.ajax({
+        url: baseUrl + "placeOrder",
+        method: "POST",
+        contentType: "application/json",
+        data: JSON.stringify(order),
+        success: function (resp) {
+            updateQtyOnHandRow();
+            if (resp && resp.status === 200) {
+                alert("Order has been saved successfully");
+            } else {
+                alert("Failed to save the order");
+            }
+        },
+        error: function (ob, statusText, error) {
+            alert(error);
+        }
+    });
+});
