@@ -38,6 +38,32 @@ public class ItemServlet extends HttpServlet {
                 resp.getWriter().print(allItems.build());
 break;
 
+            case "search":
+                String code1 = req.getParameter("ItemCode");
+                PreparedStatement pstm2 = connection.prepareStatement("select * from item where ItemCode=?");
+                pstm2.setObject(1, code1);
+                ResultSet rst2 = pstm2.executeQuery();
+                resp.addHeader("Access-Control-Allow-Origin", "*");
+
+                JsonObjectBuilder objectBuilder1 = Json.createObjectBuilder();
+                if (rst2.next()) {
+                    String ids = rst2.getString(1);
+                    String description = rst2.getString(2);
+                    String unitPrice = rst2.getString(3);
+                    String qty = rst2.getString(4);
+
+
+                    objectBuilder1.add("code", ids);
+                    objectBuilder1.add("description", description);
+                    objectBuilder1.add("unitPrice", unitPrice);
+                    objectBuilder1.add("qty", qty);
+
+
+                }
+                resp.setContentType("application/json");
+                resp.getWriter().print(objectBuilder1.build());
+
+                break;
         }
         } catch (ClassNotFoundException | SQLException e) {
             throw new RuntimeException(e);

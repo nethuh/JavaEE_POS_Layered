@@ -5,11 +5,11 @@
     <title>POS</title>
 
     <link rel="stylesheet" href="assets/css/bootstrap.min.css">
-
+    <link rel="stylesheet" href="assets/css/styles.css">
 
 
 </head>
-<body>
+<body id="bodyImg">
 <!------------header------------->
 
 <!--Header-->
@@ -309,18 +309,23 @@
                     </select>
                 </div>
                 <div class="col-12 col-md-6 col-lg-6">
+                        <label for="orderCustomerID">Customer ID</label>
+                        <input class="form-control" id="orderCustomerID">
+                </div>
+                <div class="col-12 col-md-6 col-lg-6">
                     <label for="txtcusName" class="form-label">Name :</label>
                     <input class="form-control" disabled id="txtcusName" type="text">
                 </div>
-            </div>
-            <div class="row mt-2 mb-2">
+
                 <div class="col-12 col-md-6 col-lg-6">
                     <label for="txtcusAddress" class="form-label">Address :</label>
                     <input class="form-control" disabled id="txtcusAddress" type="text">
                 </div>
-                <div class="col-12 col-md-6 col-lg-6">
+                <div class="row mt-2 mb-2">
+                <div class="col-12 col-md-12 col-lg-12">
                     <label for="txtcusSalary" class="form-label">Salary :</label>
                     <input class="form-control" disabled id="txtcusSalary" type="text">
+                </div>
                 </div>
             </div>
         </section>
@@ -336,31 +341,32 @@
                     </select>
                 </div>
                 <div class="col-12 col-md-6 col-lg-6">
+                    <label for="orderCustomerID">Item ID</label>
+                    <input class="form-control" id="itID">
+                </div>
+                <div class="col-12 col-md-6 col-lg-6">
                     <label for="itName" class="form-label">Item Name :</label>
                     <input class="form-control" disabled id="itName" type="text">
                 </div>
-            </div>
-            <div class="row mt-2">
                 <div class="col-12 col-md-6 col-lg-6">
                     <label for="itPrice" class="form-label">Unit Price :</label>
                     <input class="form-control" disabled id="itPrice" type="text">
                 </div>
+
                 <div class="col-12 col-md-6 col-lg-6">
                     <label for="itQty" class="form-label">Qty On Hand :</label>
                     <input class="form-control" disabled id="itQty" type="text">
                 </div>
-            </div>
-            <div class="row mt-2 mb-4">
-                <div class="col-12 col-md-12 col-lg-12">
+                <div class="col-12 col-md-6 col-lg-6">
                     <label for="itBuyQty" class="form-label">Ordered Quantity :</label>
                     <input class="form-control small" id="itBuyQty" type="number" role="spinbutton">
                 </div>
             </div>
             <div class="container-fluid justify-content-end d-flex" style="padding: 0;">
-                <button style="width: max-content; height: max-content; font-weight: bold;"
+                <button style="width: max-content; height: max-content; font-weight: bold;margin-top: 20px"
                         class="btn btn-success text-white"
                         type="button" id="btnAddToCart">Add To Cart
-                    <i style="padding-left: 4px;" class="fa-solid fa-cart-arrow-down"></i>
+                    <i style="padding-left: 4px; " class="fa-solid fa-cart-arrow-down"></i>
                 </button>
             </div>
         </section>
@@ -450,6 +456,7 @@
 <script src="assets/js/jquery-3.7.0.min.js"></script>
 <script src="controllers/Customer.js"></script>
 <script src="controllers/Item.js"></script>
+<script src="controllers/PurchaseOrder.js"></script>
 <script>
     /*This will only run once, When the DOM is ready for JavaScript code to execute.*/
 $(function () {

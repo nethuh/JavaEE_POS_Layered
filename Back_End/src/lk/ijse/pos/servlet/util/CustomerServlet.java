@@ -40,21 +40,25 @@ public class CustomerServlet extends HttpServlet {
 
                 break;
                     case "search":
-                        PreparedStatement pstm2 = connection.prepareStatement("select * from customer where cusID=?");
-                        pstm2.setObject(1,req.getParameter("cusID"));
-                        ResultSet rst2 = pstm2.executeQuery();
-                        JsonArrayBuilder allCustomer = Json.createArrayBuilder();
-                        resp.addHeader("Access-Control-Allow-Origin","*");
+                        PreparedStatement pstm3 = connection.prepareStatement("select * from customer where cusID=?");
+                        pstm3.setObject(1, req.getParameter("cusID"));
+                        ResultSet rst3 = pstm3.executeQuery();
+                        resp.addHeader("Access-Control-Allow-Origin", "*");
 
                         JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
-                        if (rst2.next()){
-                            objectBuilder.add("id",rst2.getString(1));
-                            objectBuilder.add("name",rst2.getString(2));
-                            objectBuilder.add("address", rst2.getString(3));
-                            objectBuilder.add("salary",rst2.getDouble(4));
-                            allCustomer.add(objectBuilder.build());
+                        if (rst3.next()) {
+                            String id = rst3.getString(1);
+                            String name = rst3.getString(2);
+                            String salary= rst3.getString(3);
+                            String address  = rst3.getString(4);
+
+                            objectBuilder.add("id", id);
+                            objectBuilder.add("name", name);
+                            objectBuilder.add("salary", salary);
+                            objectBuilder.add("address", address);
+
                         }
-                        resp.setContentType("application/jason");
+                        resp.setContentType("application/json");
                         resp.getWriter().print(objectBuilder.build());
                         break;
                 }
