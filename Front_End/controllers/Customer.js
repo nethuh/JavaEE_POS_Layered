@@ -23,3 +23,24 @@ function getAllCustomers(){
         },
     });
 }
+
+$("#customerSave-btn").click(function (){
+    let  formData = $("#CustomerForm").serialize();
+    $.ajax({
+        url: baseUrl+"customer",
+        method: "post",
+        data: formData,
+        dataType: "json",
+        success:function (res){
+            console.log("success Method Invoked");
+            console.log(res);
+            alert(res.message);
+            getAllCustomers();
+        },
+        error: function (error) {
+            console.log("Error Method Invoked");
+            console.log(JSON.parse(error.responseText));
+            alert(JSON.parse(error.responseText).message);
+        }
+    });
+});
