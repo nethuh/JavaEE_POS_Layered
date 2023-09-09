@@ -1,8 +1,6 @@
 package lk.ijse.pos.servlet.util;
 
-import javax.json.Json;
-import javax.json.JsonArrayBuilder;
-import javax.json.JsonObjectBuilder;
+import javax.json.*;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -112,5 +110,96 @@ public class CustomerServlet extends HttpServlet {
 
         }
 
+    }
+
+    @Override
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String cusID = req.getParameter("cusID");
+        resp.setContentType("application/json");
+        resp.addHeader("Access-Control-Allow-Origin","*");
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/posapi", "root", "1234");
+            PreparedStatement pstm = connection.prepareStatement("delete from Customer where cusID=?");
+            pstm.setObject(1,cusID);
+            boolean b = pstm.executeUpdate() > 0;
+            if (b) {
+                JsonObjectBuilder rjo = Json.createObjectBuilder();
+                rjo.add("state","Ok");
+                rjo.add("message","Successfully Deleted..!");
+                rjo.add("data","");
+                resp.getWriter().print(rjo.build());
+            }else {
+                throw new RuntimeException("There is no Customer for that ID..!");
+            }
+        } catch (RuntimeException e) {
+            JsonObjectBuilder rjo = Json.createObjectBuilder();
+            rjo.add("state","Error");
+            rjo.add("message",e.getLocalizedMessage());
+            rjo.add("data","");
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            resp.getWriter().print(rjo.build());
+        }catch (ClassNotFoundException | SQLException e){
+            JsonObjectBuilder rjo = Json.createObjectBuilder();
+            rjo.add("state","Error");
+            rjo.add("message",e.getLocalizedMessage());
+            rjo.add("data","");
+            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            resp.getWriter().print(rjo.build());
+        }
+    }
+
+    //    query string
+//    JSON
+    @Override
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        JsonReader reader = Json.createReader(req.getReader());
+        JsonObject customer = reader.readObject();
+        String cusID = customer.getString("cusID");
+        String cusName = customer.getString("cusName");
+        String cusAddress = customer.getString("cusAddress");
+        String cusSalary = customer.getString("cusSalary");
+        resp.addHeader("Access-Control-Allow-Origin","*");
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/posapi", "root", "1234");
+            PreparedStatement pstm = connection.prepareStatement("update Customer set cusName=?,cusAddress=?,cusSalary=? where cusID=?");
+            pstm.setObject(4,cusID);
+            pstm.setObject(1,cusName);
+            pstm.setObject(2,cusAddress);
+            pstm.setObject(3,cusSalary);
+            boolean b = pstm.executeUpdate() > 0;
+            if (b){
+                JsonObjectBuilder responseObject = Json.createObjectBuilder();
+                responseObject.add("state","Ok");
+                responseObject.add("message","Successfully Updated..!");
+                responseObject.add("data","");
+                resp.getWriter().print(responseObject.build());
+            }else{
+                throw new RuntimeException("Wrong ID, Please check the ID..!");
+            }
+
+        } catch (RuntimeException e) {
+            JsonObjectBuilder rjo = Json.createObjectBuilder();
+            rjo.add("state","Error");
+            rjo.add("message",e.getLocalizedMessage());
+            rjo.add("data","");
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            resp.getWriter().print(rjo.build());
+        }catch (ClassNotFoundException | SQLException e){
+            JsonObjectBuilder rjo = Json.createObjectBuilder();
+            rjo.add("state","Error");
+            rjo.add("message",e.getLocalizedMessage());
+            rjo.add("data","");
+            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            resp.getWriter().print(rjo.build());
+        }
+    }
+
+    @Override
+    protected void doOptions(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.addHeader("Access-Control-Allow-Origin","*");
+        resp.addHeader("Access-Control-Allow-Methods","DELETE,PUT");
+        resp.addHeader("Access-Control-Allow-Headers","content-type");
     }
 }

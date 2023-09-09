@@ -44,3 +44,49 @@ $("#customerSave-btn").click(function (){
         }
     });
 });
+
+//delete customer
+$("#customerDelete-btn").click(function () {
+    let id = $("#txtCustID").val();
+    $.ajax({
+        url: baseUrl+"customer?cusID=" + id,
+        method: "delete",
+        success: function (resp) {
+            getAllCustomers();
+            alert(resp.message);
+        },
+        error: function (error) {
+            let message = JSON.parse(error.responseText).message;
+            alert(message);
+        }
+    });
+});
+
+//update customer
+$("#customerUpdated-btn").click(function () {
+    let cusId = $('#txtCustID').val();
+    let cusName = $('#txtcusName').val();
+    let cusAddress = $('#txtcusSalary').val();
+    let cusSalary = $('#txtcusAddress').val();
+    var customerOb = {
+        id: cusId,
+        name: cusName,
+        address: cusAddress,
+        salary: cusSalary
+    }
+    $.ajax({
+        url: baseUrl+"customer",
+        method: "put",
+        contentType: "application/json",
+        data: JSON.stringify(customerOb),
+        dataType: "json",
+        success: function (resp) {
+            getAllCustomers();
+            alert(resp.message);
+        },
+        error: function (error) {
+            let message = JSON.parse(error.responseText).message;
+            alert(message);
+        }
+    });
+});
