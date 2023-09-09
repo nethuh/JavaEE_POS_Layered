@@ -1,4 +1,4 @@
-package lk.ijse.pos.servlet.util;
+package lk.ijse.pos.servlet.controller.servlet;
 
 import javax.json.*;
 import javax.servlet.ServletException;
