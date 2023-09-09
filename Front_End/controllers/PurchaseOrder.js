@@ -148,25 +148,24 @@ function calculateTotal() {
     });
     $("#total").text(total);
     $("#subtotal").text(total);
-
-    $("#txtCash").on('keyup', function () {
-        var cash = $("#txtCash").val();
-        var total = $("#total").text();
-        var discount = $("#txtDiscount").val();
-        var balance = cash - (total - discount);
-        $("#balance").val(balance);
-    });
-
-    $("#txtDiscount").on('keyup', function () {
-        var cash = $("#txtCash").val();
-        var total = $("#total").text();
-        var discount = $("#txtDiscount").val();
-        var balance = cash - (total - discount);
-        $("#balance").val(balance);
-
-        $("#subtotal").text(total - discount);
-    });
 }
+$("#txtCash").on('keyup', function () {
+    var cash = $("#txtCash").val();
+    var total = parseFloat($("#total").text()); // Parse the total as a float
+    var discount = parseFloat($("#txtDiscount").val()); // Parse the discount as a float
+    var balance = cash - (total - discount);
+    $("#balance").val(balance.toFixed(2)); // Display balance with two decimal places
+});
+
+$("#txtDiscount").on('keyup', function () {
+    var cash = $("#txtCash").val();
+    var total = parseFloat($("#total").text());
+    var discount = parseFloat($("#txtDiscount").val());
+    var balance = cash - (total - discount);
+    $("#balance").val(balance.toFixed(2));
+    $("#subtotal").text((total - discount).toFixed(2));
+});
+
 function updateQtyOnHandRow(code, sellQty) {
     $.ajax({
         url: baseUrl + "item?option=search&ItemCode=" + code,
@@ -186,25 +185,23 @@ let orderDetails;
 });*/
 
 
-$("#placeOrderBtn").click(function () {
+$("#btnPlaceOrder").click(function () {
     let orderId = $("#orderId").val();
     let orderDate = $("#txtDate").val();
-    let itemId = $("#itID").val();
-    let customerId = $("#orderCustomerID").val();
-    let qty = $("#itBuyQty").val();
-    let unitPrice = $("#itPrice").val();
-    let cartItems = orderDetails;
+    let customerId = $("#custIDCMB option:selected").val(); // Get selected customer ID
+    let itemCode = $("#itemCodeCMB option:selected").val(); // Get selected item code
+    let qty = $("#itQty").val();
+    let unitPrice = $("#balance").val();
 
+    // Create an object for the order
     let order = {
         orderId: orderId,
         date: orderDate,
         customer_ID: customerId,
-        ItemCode: itemId,
+        ItemCode: itemCode,
         qty: qty,
-        ItemCode: unitPrice,
-        orderDetails: cartItems
-    }
-
+        unitPrice: unitPrice
+    };
     console.log(order);
 
     $.ajax({

@@ -62,10 +62,10 @@ public class PurchaseOrderServlet extends HttpServlet {
         String orderId = jsonObject.getString("orderId");
         String orderDate = jsonObject.getString("date");
         String customerId = jsonObject.getString("customer_ID");
-        String itemCode = jsonObject.containsKey("ItemCode") ? jsonObject.getString("ItemCode") : "";
-        String qty = jsonObject.containsKey("qty") ? jsonObject.getString("qty") : "";
-        String unitPrice = jsonObject.containsKey("unitPrice") ? jsonObject.getString("unitPrice") : "";
-        JsonArray orderDetails = jsonObject.containsKey("orderDetails") ? jsonObject.getJsonArray("orderDetails") : null;
+        String itemCode = jsonObject.getString("ItemCode");
+        String qty = jsonObject.getString("qty");
+        String unitPrice = jsonObject.getString("unitPrice");
+        JsonArray orderDetails = jsonObject.getJsonArray("orderDetails");
 
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
