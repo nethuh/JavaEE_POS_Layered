@@ -1,4 +1,9 @@
 package lk.ijse.pos.servlet.dao.custom;
 
-public interface ItemDAO {
+import lk.ijse.pos.servlet.dao.CrudDAO;
+import lk.ijse.pos.servlet.entity.Item;
+
+import java.sql.Connection;
+
+public interface ItemDAO extends CrudDAO<Connection, Item, String> {
 }
