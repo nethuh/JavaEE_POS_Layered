@@ -78,8 +78,6 @@ public class CustomerServlet extends HttpServlet {
         String cusAddress = req.getParameter("address");
         double cusSalary = Double.parseDouble(req.getParameter("salary"));
 
-        resp.addHeader("Access-Control-Allow-Origin","*");
-
         try {
             Class.forName("com.mysql.jdbc.Driver");
             Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/posapi", "root", "1234");

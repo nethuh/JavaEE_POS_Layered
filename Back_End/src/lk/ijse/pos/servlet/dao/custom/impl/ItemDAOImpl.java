@@ -15,7 +15,7 @@ public class ItemDAOImpl implements ItemDAO {
         ResultSet rst = SQLUtil.executeQuery(connection,"SELECT * FROM Item");
         ArrayList<Item> allItems = new ArrayList<>();
         while (rst.next()){
-            allItems.add(new Item(rst.getString(1),rst.getString(2), rst.getInt(3), rst.getDouble(5) ));
+            allItems.add(new Item(rst.getString(1),rst.getString(2), rst.getInt(3), rst.getDouble(4) ));
         }
         return allItems;
     }

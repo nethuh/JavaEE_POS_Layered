@@ -1,5 +1,4 @@
 
-
 getAllItems();
 
 $("#itemGetAll-btn").click(function (){
@@ -9,7 +8,7 @@ $("#itemGetAll-btn").click(function (){
 function getAllItems(){
     $("#tblItem").empty();
     $.ajax({
-        url: baseUrl + "item?option=getAll",
+        url: baseUrl + "item",
         method : "GET",
         success:function (data){
             for (let i = 0; i < data.length; i++){
@@ -50,7 +49,7 @@ $("#itemSave-btn").click(function () {
 $("#itemDelete-btn").click(function () {
     let code = $("#txtItemCode").val();
     $.ajax({
-        url: baseUrl+"item?code=" + code,
+        url: baseUrl+"item?ItemCode=" + code,
         method: "delete",
         success: function (resp) {
             getAllItems();
