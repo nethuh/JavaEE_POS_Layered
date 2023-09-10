@@ -24,26 +24,28 @@ function getAllCustomers(){
     });
 }
 
-$("#customerSave-btn").click(function (){
-    let  formData = $("#CustomerForm").serialize();
+$("#customerSave-btn").click(function () {
+    let formData = $("#CustomerForm").serialize();
+    let apiUrl = baseUrl + "customer"; // Make sure baseUrl is defined correctly
     $.ajax({
-        url: baseUrl+"customer",
-        method: "post",
+        url: apiUrl,
+        method: "POST",
         data: formData,
         dataType: "json",
-        success:function (res){
-            console.log("success Method Invoked");
+        success: function (res) {
+            console.log("Success Method Invoked");
             console.log(res);
             alert(res.message);
             getAllCustomers();
         },
-        error: function (error) {
+        error: function (xhr, status, error) {
             console.log("Error Method Invoked");
-            console.log(JSON.parse(error.responseText));
-            alert(JSON.parse(error.responseText).message);
+            console.log(xhr.responseText);
+            alert("Error: " + error);
         }
     });
 });
+
 
 //delete customer
 $("#customerDelete-btn").click(function () {
@@ -69,10 +71,10 @@ $("#customerUpdated-btn").click(function () {
     let cusAddress = $('#txtcusSalary').val();
     let cusSalary = $('#txtcusAddress').val();
     var customerOb = {
-        id: cusId,
-        name: cusName,
-        address: cusAddress,
-        salary: cusSalary
+        cusID: cusId,
+        cusName: cusName,
+        cusAddress: cusAddress,
+        cusSalary: cusSalary
     }
     $.ajax({
         url: baseUrl+"customer",
