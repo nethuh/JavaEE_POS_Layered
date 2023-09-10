@@ -1,7 +1,7 @@
 <component name="libraryTable">
   <library name="lombok-1.18.26">
     <CLASSES>
-      <root url="jar://$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.26/lombok-1.18.26.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/lombok-1.18.26.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

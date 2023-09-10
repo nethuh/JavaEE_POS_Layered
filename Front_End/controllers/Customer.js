@@ -9,7 +9,7 @@ $("#customerGetAll-btn").click(function (){
 function getAllCustomers(){
     $("#tblCustomer").empty();
     $.ajax({
-        url : baseUrl + "customer?option=GetAll",
+        url : baseUrl + "customer",
         method:"GET",
         success: function (cus){
             for (let i = 0; i < cus.length; i++){

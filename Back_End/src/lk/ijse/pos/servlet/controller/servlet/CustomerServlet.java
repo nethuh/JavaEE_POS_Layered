@@ -1,5 +1,9 @@
 package lk.ijse.pos.servlet.controller.servlet;
 
+import lk.ijse.pos.servlet.bo.BOFactory;
+import lk.ijse.pos.servlet.bo.custom.CustomerBO;
+import lk.ijse.pos.servlet.dto.CustomerDTO;
+
 import javax.json.*;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -8,60 +12,56 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.*;
+import java.util.ArrayList;
 
 import static java.lang.Class.forName;
 @WebServlet (urlPatterns = {"/customer"})
 public class CustomerServlet extends HttpServlet {
+    private final CustomerBO customerBO = (CustomerBO) BOFactory.getInstance().getBO(BOFactory.BOTypes.CUSTOMER);
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
             try {
                 forName("com.mysql.cj.jdbc.Driver");
                 Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/posapi", "root", "1234");
-                String option = req.getParameter("option");
+                JsonArrayBuilder allCustomers = Json.createArrayBuilder();
+                ArrayList<CustomerDTO> all = customerBO.getAllCustomers(connection);
 
-                switch (option){
-                    case "GetAll":
-                        PreparedStatement pstm = connection.prepareStatement("SELECT * FROM Customer");
-                        ResultSet rst = pstm.executeQuery();
-                        JsonArrayBuilder allCustomers = Json.createArrayBuilder();
-                        resp.addHeader("Access-Control-Allow-Origin","*");
+                for (CustomerDTO customerDTO: all){
+                        JsonObjectBuilder customer = Json.createObjectBuilder();
 
-                while (rst.next()){
-                    JsonObjectBuilder customer = Json.createObjectBuilder();
-                    customer.add("id", rst.getString("cusID"));
-                    customer.add("name",rst.getString("cusName"));
-                    customer.add("address",rst.getString("cusAddress"));
-                    customer.add("salary",rst.getDouble("cusSalary"));
-                    allCustomers.add(customer.build());
-                }
-                resp.setContentType("application/json");
-                resp.getWriter().print(allCustomers.build());
-
-                break;
-                    case "search":
-                        PreparedStatement pstm3 = connection.prepareStatement("select * from customer where cusID=?");
-                        pstm3.setObject(1, req.getParameter("cusID"));
-                        ResultSet rst3 = pstm3.executeQuery();
-                        resp.addHeader("Access-Control-Allow-Origin", "*");
-
-                        JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
-                        if (rst3.next()) {
-                            String id = rst3.getString(1);
-                            String name = rst3.getString(2);
-                            String salary= rst3.getString(3);
-                            String address  = rst3.getString(4);
-
-                            objectBuilder.add("id", id);
-                            objectBuilder.add("name", name);
-                            objectBuilder.add("salary", salary);
-                            objectBuilder.add("address", address);
-
-                        }
-                        resp.setContentType("application/json");
-                        resp.getWriter().print(objectBuilder.build());
-                        break;
-                }
+                        customer.add("id", customerDTO.getCusId());
+                        customer.add("name", customerDTO.getCusName());
+                        customer.add("address", customerDTO.getAddress());
+                        customer.add("salary", customerDTO.getSalary());
+                        allCustomers.add(customer.build());
+                    }
+                    resp.setContentType("application/json");
+                    resp.getWriter().print(allCustomers.build());
+//                break;
+//                    case "search":
+//                        PreparedStatement pstm3 = connection.prepareStatement("select * from customer where cusID=?");
+//                        pstm3.setObject(1, req.getParameter("cusID"));
+//                        ResultSet rst3 = pstm3.executeQuery();
+//                        resp.addHeader("Access-Control-Allow-Origin", "*");
+//
+//                        JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
+//                        if (rst3.next()) {
+//                            String id = rst3.getString(1);
+//                            String name = rst3.getString(2);
+//                            String salary= rst3.getString(3);
+//                            String address  = rst3.getString(4);
+//
+//                            objectBuilder.add("id", id);
+//                            objectBuilder.add("name", name);
+//                            objectBuilder.add("salary", salary);
+//                            objectBuilder.add("address", address);
+//
+//                        }
+//                        resp.setContentType("application/json");
+//                        resp.getWriter().print(objectBuilder.build());
+//                        break;
+//                }
 
             } catch (ClassNotFoundException | SQLException e) {
                 throw new RuntimeException(e);
