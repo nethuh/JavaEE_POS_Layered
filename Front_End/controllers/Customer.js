@@ -6,13 +6,13 @@ $("#customerGetAll-btn").click(function (){
     getAllCustomers();
 });
 
-function getAllCustomers(){
+function getAllCustomers() {
     $("#tblCustomer").empty();
     $.ajax({
-        url : baseUrl + "customer",
-        method:"GET",
-        success: function (cus){
-            for (let i = 0; i < cus.length; i++){
+        url: baseUrl + "customer",
+        method: "GET",
+        success: function (cus) {
+            for (let i = 0; i < cus.length; i++) {
                 let id = cus[i].id;
                 let name = cus[i].name;
                 let address = cus[i].address;
@@ -20,30 +20,40 @@ function getAllCustomers(){
                 let row = `<tr><td>${id}</td><td>${name}</td><td>${address}</td><td>${salary}</td>`;
                 $("#tblCustomer").append(row);
             }
-        },
+        }
+
     });
 }
 
 $("#customerSave-btn").click(function () {
     let formData = $("#CustomerForm").serialize();
-    let apiUrl = baseUrl + "customer"; // Make sure baseUrl is defined correctly
-    $.ajax({
-        url: apiUrl,
-        method: "POST",
-        data: formData,
-        dataType: "json",
-        success: function (res) {
-            console.log("Success Method Invoked");
-            console.log(res);
-            alert(res.message);
-            getAllCustomers();
-        },
-        error: function (xhr, status, error) {
-            console.log("Error Method Invoked");
-            console.log(xhr.responseText);
-            alert("Error: " + error);
-        }
-    });
+    let customer = new Customer($("#txtCustID").val(), $("#txtCustName").val(), $("#txtCustAddress").val(), $("#txtCustSalary").val());
+
+    let json = {
+        id: customer.getCusId(),
+        name: customer.getCusName(),
+        address: customer.getCusAddress(),
+        salary: customer.getCusSalary()
+    };
+
+    if ($(this).text() == "Save") {
+        $.ajax({
+            url: baseUrl + "customer",
+            type: "POST",
+            data: formData,
+            dataType: "json",
+            success: function (res) {
+                getAllCustomers();
+                alert(res.message);
+            },
+            error: function (error) {
+                let parse = JSON.parse(error.responseText);
+                alert(parse.message);
+            }
+        });
+
+    }
+
 });
 
 
@@ -67,9 +77,9 @@ $("#customerDelete-btn").click(function () {
 //update customer
 $("#customerUpdated-btn").click(function () {
     let cusId = $('#txtCustID').val();
-    let cusName = $('#txtcusName').val();
-    let cusAddress = $('#txtcusSalary').val();
-    let cusSalary = $('#txtcusAddress').val();
+    let cusName = $('#txtCustName').val();
+    let cusAddress = $('#txtCustAddress').val();
+    let cusSalary = $('#txtCustSalary').val();
     var customerOb = {
         cusID: cusId,
         cusName: cusName,
