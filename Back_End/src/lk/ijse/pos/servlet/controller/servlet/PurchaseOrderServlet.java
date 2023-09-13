@@ -1,5 +1,9 @@
 package lk.ijse.pos.servlet.controller.servlet;
 
+import lk.ijse.pos.servlet.bo.BOFactory;
+import lk.ijse.pos.servlet.bo.custom.PlaceOrderBO;
+import lk.ijse.pos.servlet.util.MessageUtil;
+
 import javax.json.*;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -11,6 +15,8 @@ import java.io.PrintWriter;
 import java.sql.*;
 @WebServlet(urlPatterns = {"/placeOrder"})
 public class PurchaseOrderServlet extends HttpServlet {
+    private final PlaceOrderBO placeOrderBO = (PlaceOrderBO) BOFactory.getInstance().getBO(BOFactory.BOTypes.ORDER);
+    MessageUtil messageUtil = new MessageUtil();
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {

@@ -1,4 +1,4 @@
-package lk.ijse.pos.servlet.dto;
+package lk.ijse.pos.servlet.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,9 +7,9 @@ import lombok.ToString;
 @Data
 @AllArgsConstructor
 @ToString
-public class ItemDTO {
+public class OrderDetail {
+    private String orderId;
     private String code;
-    private String name;
-    private int qtyOnHand;
     private double price;
+    private int qty;
 }
