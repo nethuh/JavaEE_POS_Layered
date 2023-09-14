@@ -189,7 +189,7 @@ $("#btnPlaceOrder").click(function () {
     let orderDate = $("#txtDate").val();
     let customerId = $("#custIDCMB option:selected").val(); // Get selected customer ID
     let itemCode = $("#itemCodeCMB option:selected").val(); // Get selected item code
-    let qty = $("#itQty").val();
+    let qty = $("#itBuyQty").val();
     let unitPrice = $("#balance").val();
 
     // Create an object for the order
