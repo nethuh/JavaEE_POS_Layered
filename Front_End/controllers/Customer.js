@@ -27,35 +27,24 @@ function getAllCustomers() {
 
 $("#customerSave-btn").click(function () {
     let formData = $("#CustomerForm").serialize();
-    let customer = new Customer($("#txtCustID").val(), $("#txtCustName").val(), $("#txtCustAddress").val(), $("#txtCustSalary").val());
-
-    let json = {
-        id: customer.getCusId(),
-        name: customer.getCusName(),
-        address: customer.getCusAddress(),
-        salary: customer.getCusSalary()
-    };
-
-    if ($(this).text() == "Save") {
-        $.ajax({
-            url: baseUrl + "customer",
-            type: "POST",
-            data: formData,
-            dataType: "json",
-            success: function (res) {
-                getAllCustomers();
-                alert(res.message);
-            },
-            error: function (error) {
-                let parse = JSON.parse(error.responseText);
-                alert(parse.message);
-            }
-        });
-
-    }
-
+    $.ajax({
+        url: baseUrl+"customer",
+        method: "POST",
+        data: formData,
+        dataType: "json",
+        success: function (res) {
+            console.log("success Method Invoked");
+            console.log(res);
+            alert(res.message);
+            getAllCustomers();
+        },
+        error: function (error) {
+            console.log("Error Method Invoked");
+            console.log(JSON.parse(error.responseText));
+            alert(JSON.parse(error.responseText).message);
+        }
+    });
 });
-
 
 //delete customer
 $("#customerDelete-btn").click(function () {

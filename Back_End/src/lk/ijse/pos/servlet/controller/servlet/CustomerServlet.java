@@ -2,8 +2,10 @@ package lk.ijse.pos.servlet.controller.servlet;
 
 import lk.ijse.pos.servlet.bo.BOFactory;
 import lk.ijse.pos.servlet.bo.custom.CustomerBO;
+import lk.ijse.pos.servlet.bo.custom.PlaceOrderBO;
 import lk.ijse.pos.servlet.dto.CustomerDTO;
 import lk.ijse.pos.servlet.util.MessageUtil;
+import org.apache.commons.dbcp2.BasicDataSource;
 
 import javax.json.*;
 import javax.servlet.ServletException;
@@ -19,17 +21,20 @@ import static java.lang.Class.forName;
 @WebServlet (urlPatterns = "/customer")
 public class CustomerServlet extends HttpServlet {
     private final CustomerBO customerBO = (CustomerBO) BOFactory.getInstance().getBO(BOFactory.BOTypes.CUSTOMER);
+    private final PlaceOrderBO placeOrderBO = (PlaceOrderBO) BOFactory.getInstance().getBO(BOFactory.BOTypes.ORDER);
+
     private final MessageUtil messageUtil = new MessageUtil();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-            try {
-                forName("com.mysql.cj.jdbc.Driver");
-                Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/posapi", "root", "1234");
-                JsonArrayBuilder allCustomers = Json.createArrayBuilder();
-                ArrayList<CustomerDTO> all = customerBO.getAllCustomers(connection);
+        String option = req.getParameter("option");
+            try (Connection connection = ((BasicDataSource) getServletContext().getAttribute("dbcp")).getConnection()) {
+                switch (option) {
+                    case "GetAll":
+                    JsonArrayBuilder allCustomers = Json.createArrayBuilder();
+                    ArrayList<CustomerDTO> all = customerBO.getAllCustomers(connection);
 
-                for (CustomerDTO customerDTO: all){
+                    for (CustomerDTO customerDTO : all) {
                         JsonObjectBuilder customer = Json.createObjectBuilder();
 
                         customer.add("id", customerDTO.getCusId());
@@ -38,35 +43,27 @@ public class CustomerServlet extends HttpServlet {
                         customer.add("salary", customerDTO.getSalary());
                         allCustomers.add(customer.build());
                     }
-                    resp.setContentType("application/json");
                     resp.getWriter().print(allCustomers.build());
-//                break;
-//                    case "search":
-//                        PreparedStatement pstm3 = connection.prepareStatement("select * from customer where cusID=?");
-//                        pstm3.setObject(1, req.getParameter("cusID"));
-//                        ResultSet rst3 = pstm3.executeQuery();
-//                        resp.addHeader("Access-Control-Allow-Origin", "*");
-//
-//                        JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
-//                        if (rst3.next()) {
-//                            String id = rst3.getString(1);
-//                            String name = rst3.getString(2);
-//                            String salary= rst3.getString(3);
-//                            String address  = rst3.getString(4);
-//
-//                            objectBuilder.add("id", id);
-//                            objectBuilder.add("name", name);
-//                            objectBuilder.add("salary", salary);
-//                            objectBuilder.add("address", address);
-//
-//                        }
-//                        resp.setContentType("application/json");
-//                        resp.getWriter().print(objectBuilder.build());
-//                        break;
-//                }
+                break;
+                    case "search":
+                        CustomerDTO customerDTO = placeOrderBO.searchCustomer(connection, req.getParameter("cusID"));
+                         if (customerDTO != null) {
+                             JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
+                            objectBuilder.add("id", customerDTO.getCusId());
+                            objectBuilder.add("name", customerDTO.getCusName());
+                            objectBuilder.add("salary", customerDTO.getAddress());
+                            objectBuilder.add("address", customerDTO.getSalary());
 
-            } catch (ClassNotFoundException | SQLException e) {
-                throw new RuntimeException(e);
+                             resp.setStatus(200);
+                             resp.getWriter().print(objectBuilder.build());
+                         }else {
+                             throw new SQLException("No Such Customer ID");
+                         }
+                             break;
+                }
+                } catch(ClassNotFoundException | SQLException e){
+                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                resp.getWriter().print(messageUtil.buildJsonObject("Error", e.getLocalizedMessage(), "").build());
             }
 
     }

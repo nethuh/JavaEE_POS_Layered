@@ -4,6 +4,7 @@ import lk.ijse.pos.servlet.bo.BOFactory;
 import lk.ijse.pos.servlet.bo.custom.ItemBO;
 import lk.ijse.pos.servlet.dto.ItemDTO;
 import lk.ijse.pos.servlet.util.MessageUtil;
+import org.apache.commons.dbcp2.BasicDataSource;
 
 import javax.json.*;
 import javax.servlet.ServletException;
@@ -24,21 +25,18 @@ public class ItemServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         JsonArrayBuilder allItems = Json.createArrayBuilder();
-        try {
-            forName("com.mysql.cj.jdbc.Driver");
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/posapi", "root", "1234");
-            ArrayList<ItemDTO> items = itemBO.getAllItems(connection);
+        try (Connection connection = ((BasicDataSource) getServletContext().getAttribute("dbcp")).getConnection()){
+              ArrayList<ItemDTO> items = itemBO.getAllItems(connection);
             for (ItemDTO item : items) {
-                JsonObjectBuilder Jitem = Json.createObjectBuilder();
-                Jitem.add("code", item.getCode());
-                Jitem.add("name", item.getName());
-                Jitem.add("Qty", item.getQtyOnHand());
-                Jitem.add("Price", item.getPrice());
-                allItems.add(Jitem.build());
+                JsonObjectBuilder JsonItem = Json.createObjectBuilder();
+                JsonItem.add("code", item.getCode());
+                JsonItem.add("name", item.getName());
+                JsonItem.add("Qty", item.getQtyOnHand());
+                JsonItem.add("Price", item.getPrice());
+                allItems.add(JsonItem.build());
             }
             resp.setStatus(200);
-            resp.getWriter().print(messageUtil.buildJsonObject("OK", "Successfully Loaded..!", allItems).build());
-
+            resp.getWriter().print(allItems.build());
 
 //            case "search":
 //                String code1 = req.getParameter("ItemCode");
@@ -81,9 +79,7 @@ public class ItemServlet extends HttpServlet {
         double unitPrice = Double.parseDouble(req.getParameter("unitPrice"));
         int qtyOnHand = Integer.parseInt(req.getParameter("qtyOnHand"));
 
-        try {
-            Class.forName("com.mysql.jdbc.Driver");
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/posapi", "root", "1234");
+        try (Connection connection = ((BasicDataSource) getServletContext().getAttribute("dbcp")).getConnection()){
 
                if (itemBO.saveItem(connection, new ItemDTO(code,description,qtyOnHand,unitPrice))) {
                    resp.setStatus(200);

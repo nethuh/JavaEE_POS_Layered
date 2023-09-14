@@ -3,7 +3,9 @@ var genarateOrderId = 0;
 
 
 $("#orderId").val('0-00' + (genarateOrderId += 1));
-
+// Call the function to start loading customer IDs
+loadCustomerIds();
+loadItemIds();
 function loadCustomerIds() {
     $("#custIDCMB").empty();
     $("#custIDCMB").append($("<option></option>").attr("value", 0).text("Select ID"));
@@ -44,9 +46,6 @@ function loadCustomer() {
     });
 }
 
-// Call the function to start loading customer IDs
-loadCustomerIds();
-
 function loadItemIds() {
     $("#itemCodeCMB").empty();
     $("#itemCodeCMB").append($("<option></option>").attr("value", 0).text("Select ID"));
@@ -54,7 +53,7 @@ function loadItemIds() {
     var countItemId = 1;
 
     $.ajax({
-        url: baseUrl+"item?option=getAll",
+        url: baseUrl+"item",
         method: "GET",
         success: function (resp) {
             for (let code of resp) {
@@ -76,7 +75,7 @@ function loadItemIds() {
 
 function loadItems() {
     $.ajax({
-        url:baseUrl+ "item?option=search&ItemCode=" + $("#itemCodeCMB option:selected").text(),
+        url:baseUrl+ "item?option=item&code=" + $("#itemCodeCMB option:selected").text(),
         method: "GET",
         success: function (resp) {
             $("#itID").val(resp.code);
@@ -90,7 +89,7 @@ function loadItems() {
     });
 }
 
-loadItemIds();
+
 
 
 $("#btnAddToCart").click(function () {
