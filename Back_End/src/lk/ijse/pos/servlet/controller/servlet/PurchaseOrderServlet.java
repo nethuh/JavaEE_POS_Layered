@@ -29,5 +29,27 @@ public class PurchaseOrderServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        JsonReader reader = Json.createReader(req.getReader());
+        JsonObject details = reader.readObject();
+        String cusId = details.getString("cusId");
+        double total = Double.parseDouble(details.getString("total"));
+        JsonArray items = details.getJsonArray("items");
+
+        try (Connection connection = ((BasicDataSource) getServletContext().getAttribute("dbcp")).getConnection()){
+
+            String orderId = placeOrderBO.generateNewOrderID(connection);
+            List<OrderDetailDTO> orderDetails = new ArrayList<>();
+            for (JsonValue item : items) {
+                JsonObject jsonObject = item.asJsonObject();
+                orderDetails.add(new OrderDetailDTO(orderId, jsonObject.getString("code"), Double.parseDouble(jsonObject.getString("unitPrice")), Integer.parseInt(jsonObject.getString("qty"))));
+            }
+            if (placeOrderBO.purchaseOrder(connection, new OrderDTO(orderId, cusId, total, LocalDate.now().toString(), orderDetails))) {
+                resp.setStatus(200);
+                resp.getWriter().print(messageUtil.buildJsonObject("OK", "Order Placed", "").build());
+            }
+        } catch (ClassNotFoundException | SQLException e) {
+            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            resp.getWriter().print(messageUtil.buildJsonObject("Error", e.getLocalizedMessage(), "").build());
+        }
     }
 }
