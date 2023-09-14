@@ -2,6 +2,7 @@ package lk.ijse.pos.servlet.controller.servlet;
 
 import lk.ijse.pos.servlet.bo.BOFactory;
 import lk.ijse.pos.servlet.bo.custom.ItemBO;
+import lk.ijse.pos.servlet.bo.custom.PlaceOrderBO;
 import lk.ijse.pos.servlet.dto.ItemDTO;
 import lk.ijse.pos.servlet.util.MessageUtil;
 import org.apache.commons.dbcp2.BasicDataSource;
@@ -21,50 +22,46 @@ import static java.lang.Class.forName;
 public class ItemServlet extends HttpServlet {
     private final MessageUtil messageUtil = new MessageUtil();
     ItemBO itemBO = (ItemBO) BOFactory.getInstance().getBO(BOFactory.BOTypes.ITEM);
+    private final PlaceOrderBO placeOrderBO = (PlaceOrderBO) BOFactory.getInstance().getBO(BOFactory.BOTypes.ORDER);
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        JsonArrayBuilder allItems = Json.createArrayBuilder();
+        String option = req.getParameter("option");
+
         try (Connection connection = ((BasicDataSource) getServletContext().getAttribute("dbcp")).getConnection()){
-              ArrayList<ItemDTO> items = itemBO.getAllItems(connection);
-            for (ItemDTO item : items) {
-                JsonObjectBuilder JsonItem = Json.createObjectBuilder();
-                JsonItem.add("code", item.getCode());
-                JsonItem.add("name", item.getName());
-                JsonItem.add("Qty", item.getQtyOnHand());
-                JsonItem.add("Price", item.getPrice());
-                allItems.add(JsonItem.build());
+            switch (option) {
+                case "getAll":
+                    JsonArrayBuilder allItems = Json.createArrayBuilder();
+                ArrayList<ItemDTO> items = itemBO.getAllItems(connection);
+                for (ItemDTO item : items) {
+                    JsonObjectBuilder JsonItem = Json.createObjectBuilder();
+                    JsonItem.add("code", item.getCode());
+                    JsonItem.add("name", item.getName());
+                    JsonItem.add("Qty", item.getQtyOnHand());
+                    JsonItem.add("Price", item.getPrice());
+                    allItems.add(JsonItem.build());
+                }
+                resp.getWriter().print(allItems.build());
+                break;
+
+            case "search":
+               ItemDTO itemDTO = placeOrderBO.searchItem(connection,req.getParameter("ItemCode"));
+                if (itemDTO != null) {
+                    JsonObjectBuilder objectBuilder1 = Json.createObjectBuilder();
+
+                    objectBuilder1.add("code", itemDTO.getCode());
+                    objectBuilder1.add("description", itemDTO.getName());
+                    objectBuilder1.add("unitPrice", itemDTO.getPrice());
+                    objectBuilder1.add("qty", itemDTO.getQtyOnHand());
+
+                    resp.setStatus(200);
+                    resp.getWriter().print(objectBuilder1.build());
+                }else {
+                    throw new SQLException("No Such CusID");
+                }
+
+                break;
             }
-            resp.setStatus(200);
-            resp.getWriter().print(allItems.build());
-
-//            case "search":
-//                String code1 = req.getParameter("ItemCode");
-//                PreparedStatement pstm2 = connection.prepareStatement("select * from item where ItemCode=?");
-//                pstm2.setObject(1, code1);
-//                ResultSet rst2 = pstm2.executeQuery();
-//                resp.addHeader("Access-Control-Allow-Origin", "*");
-//
-//                JsonObjectBuilder objectBuilder1 = Json.createObjectBuilder();
-//                if (rst2.next()) {
-//                    String ids = rst2.getString(1);
-//                    String description = rst2.getString(2);
-//                    String unitPrice = rst2.getString(3);
-//                    String qty = rst2.getString(4);
-//
-//
-//                    objectBuilder1.add("code", ids);
-//                    objectBuilder1.add("description", description);
-//                    objectBuilder1.add("unitPrice", unitPrice);
-//                    objectBuilder1.add("qty", qty);
-//
-//
-//                }
-//                resp.setContentType("application/json");
-//                resp.getWriter().print(objectBuilder1.build());
-//
-//                break;
-
         } catch (ClassNotFoundException | SQLException e) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             resp.getWriter().print(messageUtil.buildJsonObject("Error", e.getLocalizedMessage(), "").build());

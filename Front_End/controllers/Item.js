@@ -8,7 +8,7 @@ $("#itemGetAll-btn").click(function (){
 function getAllItems(){
     $("#tblItem").empty();
     $.ajax({
-        url: baseUrl + "item",
+        url: baseUrl + "item?option=getAll",
         method : "GET",
         success:function (data){
             for (let i = 0; i < data.length; i++){

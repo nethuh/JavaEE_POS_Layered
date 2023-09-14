@@ -53,7 +53,7 @@ function loadItemIds() {
     var countItemId = 1;
 
     $.ajax({
-        url: baseUrl+"item",
+        url: baseUrl+"item?option=getAll",
         method: "GET",
         success: function (resp) {
             for (let code of resp) {
@@ -75,7 +75,7 @@ function loadItemIds() {
 
 function loadItems() {
     $.ajax({
-        url:baseUrl+ "item?option=item&code=" + $("#itemCodeCMB option:selected").text(),
+        url:baseUrl+ "item?option=search&ItemCode=" + $("#itemCodeCMB option:selected").text(),
         method: "GET",
         success: function (resp) {
             $("#itID").val(resp.code);
