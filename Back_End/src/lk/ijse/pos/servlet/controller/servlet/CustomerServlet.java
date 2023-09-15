@@ -75,9 +75,8 @@ public class CustomerServlet extends HttpServlet {
         String cusAddress = req.getParameter("address");
         double cusSalary = Double.parseDouble(req.getParameter("salary"));
 
-        try {
-            Class.forName("com.mysql.jdbc.Driver");
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/posapi", "root", "1234");
+        try (Connection connection = ((BasicDataSource) getServletContext().getAttribute("dbcp")).getConnection()){
+
             if (customerBO.saveCustomer(connection,new CustomerDTO(cusID,cusName,cusAddress,cusSalary))){
                 resp.setStatus(200);
                 resp.getWriter().print(messageUtil.buildJsonObject("OK","Successfully Added..!","").build());
@@ -95,9 +94,7 @@ public class CustomerServlet extends HttpServlet {
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String cusID = req.getParameter("cusID");
 
-        try {
-            Class.forName("com.mysql.jdbc.Driver");
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/posapi", "root", "1234");
+        try (Connection connection = ((BasicDataSource)getServletContext().getAttribute("dbcp")).getConnection()) {
             if (customerBO.deleteCustomer(connection,cusID)) {
                 resp.setStatus(200);
                 resp.getWriter().print(messageUtil.buildJsonObject("Ok","Successfully Deleted..!","").build());
@@ -121,9 +118,7 @@ public class CustomerServlet extends HttpServlet {
         String address = customer.getString("cusAddress");
         double salary = Double.parseDouble(customer.getString("cusSalary"));
 
-        try {
-            Class.forName("com.mysql.jdbc.Driver");
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/posapi", "root", "1234");
+        try (Connection connection = ((BasicDataSource)getServletContext().getAttribute("dbcp")).getConnection()) {
 
             if (customerBO.updateCustomer(connection,new CustomerDTO(cusID,cusName,address,salary))){
 

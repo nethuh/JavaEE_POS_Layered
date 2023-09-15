@@ -94,9 +94,7 @@ public class ItemServlet extends HttpServlet {
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String code = req.getParameter("code");
-        try {
-            Class.forName("com.mysql.jdbc.Driver");
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/posapi", "root", "1234");
+        try (Connection connection =((BasicDataSource) getServletContext().getAttribute("dbcp")).getConnection()){
             if (itemBO.deleteItems(connection, code)) {
                 resp.getWriter().print(messageUtil.buildJsonObject("OK", "Successfully Deleted..!", "").build());
             } else {
@@ -117,10 +115,8 @@ public class ItemServlet extends HttpServlet {
         String description = item.getString("description");
         double unitPrice = Double.parseDouble(item.getString("unitPrice"));
         int qtyOnHand = item.getInt("qtyOnHand");
-         try {
-            Class.forName("com.mysql.jdbc.Driver");
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/posapi", "root", "1234");
-            if (itemBO.updateItem(connection,new ItemDTO(code,description,qtyOnHand,unitPrice))) {
+         try (Connection connection = ((BasicDataSource) getServletContext().getAttribute("dbpc")).getConnection()){
+              if (itemBO.updateItem(connection,new ItemDTO(code,description,qtyOnHand,unitPrice))) {
                 resp.setStatus(200);
                 resp.getWriter().print(messageUtil.buildJsonObject("OK","Successfully Updated","").build());
             } else {

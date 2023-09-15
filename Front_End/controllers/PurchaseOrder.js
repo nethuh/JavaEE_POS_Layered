@@ -125,7 +125,7 @@ $("#btnAddToCart").click(function () {
     $("#itName").val("");
     $("#itPrice").val("");
     $("#itQty").val("");
-    $("#itBuyQty").val("");
+   // $("#itBuyQty").val("");
 
     $("#orderCustomerID").focus();
 
