@@ -147,30 +147,26 @@ function calculateTotal(){
         total+=parseFloat(price);
     });
     $("#total").val(total);
-    $("#subTotal").val(total);
+    $("#subtotal").val(total);
 
 
-    $("#txtCash").keyup(function (){
+    $("#txtCash").on('keyup',function (){
         let cash=$("#txtCash").val();
         let subTotal=$("#subtotal").val();
         let balance=cash-subTotal;
         $("#balance").val(balance);
     });
+    $("#txtDiscount").on('keyup', function () {
+        var cash = $("#txtCash").val();
+        var total = $("#total").text();
+        var discount = $("#txtDiscount").val();
+        var balance = cash - (total - discount);
+        $("#balance").val(balance);
+
+        $("#subtotal").text(total - discount);
+    });
 
 }
-
-$("#txtDiscount").on('keyup', function () {
-    var cash = parseFloat($("#txtCash").val());
-    var total = parseFloat($("#total").text());
-    var discount = parseFloat($("#txtDiscount").val());
-
-     var balance = cash - (total - discount);
-    var subtotal = total - discount;
-
-    $("#balance").val(balance.toFixed(2));
-    $("#subtotal").text(subtotal.toFixed(2));
-});
-
 
 function updateQtyOnHandRow(code, sellQty) {
     $.ajax({
@@ -185,10 +181,6 @@ function updateQtyOnHandRow(code, sellQty) {
     });
 }
 
-/*$(document).ready(function () {
-
-
-});*/
 
 let cartItemsRow=[];
 $("#btnPlaceOrder").click(function () {
