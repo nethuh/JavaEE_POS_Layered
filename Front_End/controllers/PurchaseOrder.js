@@ -96,7 +96,7 @@ $("#btnAddToCart").click(function () {
     let itemCode = $("#itID").val();
     let itemDescription = $("#itName").val();
     let itemPrice = $("#itPrice").val();
-    let itemQty = $("#itQty").val();
+    let itemQty = $("#itBuyQty").val();
 
     let cartItemsRow = [];
 
@@ -140,30 +140,37 @@ $("#btnAddToCart").click(function () {
     updateQtyOnHandRow(itemCode, itemQty);
 
 });
-function calculateTotal() {
-    let total = 0;
-    $("#tblCart tr td:nth-child(5)").each(function () {
-        total += parseFloat($(this).text());
+function calculateTotal(){
+    let total=0;
+    $("#tblCart tr").each(function (){
+        let price=$(this).find("td:eq(4)").text();
+        total+=parseFloat(price);
     });
-    $("#total").text(total);
-    $("#subtotal").text(total);
+    $("#total").val(total);
+    $("#subTotal").val(total);
+
+
+    $("#txtCash").keyup(function (){
+        let cash=$("#txtCash").val();
+        let subTotal=$("#subtotal").val();
+        let balance=cash-subTotal;
+        $("#balance").val(balance);
+    });
+
 }
-$("#txtCash").on('keyup', function () {
-    var cash = $("#txtCash").val();
-    var total = parseFloat($("#total").text()); // Parse the total as a float
-    var discount = parseFloat($("#txtDiscount").val()); // Parse the discount as a float
-    var balance = cash - (total - discount);
-    $("#balance").val(balance.toFixed(2)); // Display balance with two decimal places
-});
 
 $("#txtDiscount").on('keyup', function () {
-    var cash = $("#txtCash").val();
+    var cash = parseFloat($("#txtCash").val());
     var total = parseFloat($("#total").text());
     var discount = parseFloat($("#txtDiscount").val());
-    var balance = cash - (total - discount);
+
+     var balance = cash - (total - discount);
+    var subtotal = total - discount;
+
     $("#balance").val(balance.toFixed(2));
-    $("#subtotal").text((total - discount).toFixed(2));
+    $("#subtotal").text(subtotal.toFixed(2));
 });
+
 
 function updateQtyOnHandRow(code, sellQty) {
     $.ajax({
@@ -177,20 +184,20 @@ function updateQtyOnHandRow(code, sellQty) {
         }
     });
 }
-let orderDetails;
+
 /*$(document).ready(function () {
 
 
 });*/
 
-
+let cartItemsRow=[];
 $("#btnPlaceOrder").click(function () {
     let orderId = $("#orderId").val();
     let orderDate = $("#txtDate").val();
     let customerId = $("#custIDCMB option:selected").val(); // Get selected customer ID
     let itemCode = $("#itemCodeCMB option:selected").val(); // Get selected item code
     let qty = $("#itBuyQty").val();
-    let unitPrice = $("#balance").val();
+    let unitPrice = $("#total").val();
 
     // Create an object for the order
     let order = {
@@ -199,15 +206,16 @@ $("#btnPlaceOrder").click(function () {
         customer_ID: customerId,
         ItemCode: itemCode,
         qty: qty,
-        unitPrice: unitPrice
+        unitPrice: unitPrice,
     };
-    console.log(order);
+    console.log(JSON.stringify(order));
 
     $.ajax({
         url: baseUrl + "placeOrder",
         method: "POST",
         contentType: "application/json",
         data: JSON.stringify(order),
+        setRequestHeader:"Access-Control-Allow-Origin",
         success: function (resp) {
             updateQtyOnHandRow();
             if (resp && resp.status === 200) {

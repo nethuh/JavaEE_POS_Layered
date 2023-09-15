@@ -29,61 +29,42 @@ public class PurchaseOrderServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        JsonReader reader = Json.createReader(req.getReader());
+        try (Connection connection = ((BasicDataSource) getServletContext().getAttribute("dbcp")).getConnection()){
+            JsonReader reader = Json.createReader(req.getReader());
         JsonObject jsonObject = reader.readObject();
 
         String orderId = jsonObject.getString("order_ID");
         String orderDate = jsonObject.getString("date");
         String customerId = jsonObject.getString("customer_ID");
-        String itemCode = jsonObject.getString("ItemCode");
-        String qty = jsonObject.getString("qty");
-        String unitPrice = jsonObject.getString("unitPrice");
-        JsonArray orderDetails = jsonObject.getJsonArray("orderDetails");
+            Double total = jsonObject.getJsonNumber("total").doubleValue();
+            JsonArray orderDetails = jsonObject.getJsonArray("orderDetails");
 
-        try (Connection connection = ((BasicDataSource) getServletContext().getAttribute("dbcp")).getConnection()){
-             connection.setAutoCommit(false);
+            System.out.println(orderDetails);
 
-            PreparedStatement orderStatement = connection.prepareStatement("INSERT INTO orders VALUES(?,?,?)");
-            orderStatement.setString(1, orderId);
-            orderStatement.setString(2, orderDate);
-            orderStatement.setString(3, customerId);
+            ArrayList<OrderDetailDTO> orderDetailDTOS = new ArrayList<>();
+            for (JsonValue orderdetail : orderDetails){
+                String itemId = orderdetail.asJsonObject().getString("code");
+                String description = orderdetail.asJsonObject().getString("description");
+                Double unitPrice = orderdetail.asJsonObject().getJsonNumber("unitPrice").doubleValue();
+                int qty = orderdetail.asJsonObject().getInt("qty");
 
-            int affectedRows = orderStatement.executeUpdate();
-            if (affectedRows == 0) {
-                connection.rollback();
-                throw new RuntimeException("Failed to save the order");
-            } else {
-                System.out.println("Order Saved");
+                orderDetailDTOS.add(new OrderDetailDTO(orderId, itemId, unitPrice, qty));
+            }
+            OrderDTO orderDTO = new OrderDTO(orderId, orderDate, customerId, total, orderDetailDTOS);
+            System.out.println(orderDTO);
 
+            boolean isAdded = placeOrderBO.purchaseOrder((Connection) orderDTO, (OrderDTO) connection);
+
+            if (isAdded){
+                resp.getWriter().print(messageUtil.buildJsonObject("Success", "Orders Added",""));
+
+            }else {
+                resp.getWriter().print(messageUtil.buildJsonObject("Error", "Failed to Add Order", ""));
             }
 
-
-            PreparedStatement orderDetailStatement = connection.prepareStatement("INSERT INTO order_detail VALUES(?,?,?,?)");
-            orderDetailStatement.setString(1, orderId);
-            orderDetailStatement.setString(2, itemCode);
-            orderDetailStatement.setString(3, qty);
-            orderDetailStatement.setString(4, unitPrice);
-
-            affectedRows = orderDetailStatement.executeUpdate();
-            if (affectedRows == 0) {
-                connection.rollback();
-                throw new RuntimeException("Failed to save the order details");
-            } else {
-                System.out.println("Order Details Saved");
-            }
-
-
-            connection.commit();
-            resp.setStatus(HttpServletResponse.SC_OK);
-            JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
-            objectBuilder.add("message", "Successfully Purchased Order.");
-            objectBuilder.add("status", resp.getStatus());
-            resp.getWriter().print(objectBuilder.build());
-
-
-        } catch (SQLException e) {
-            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            resp.getWriter().print(messageUtil.buildJsonObject("Error", e.getLocalizedMessage(), "").build());
+        } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
         }
-        }
+    }
     }

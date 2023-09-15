@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.ToString;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -12,7 +13,11 @@ import java.util.List;
 public class OrderDTO {
     private String orderId;
     private String cusId;
-    private double cost;
     private String orderDate;
+    private double cost;
+    
     private List<OrderDetailDTO> orderDetails;
+
+    public OrderDTO(String orderId, String orderDate, String customerId, ArrayList<OrderDetailDTO> orderDetailDTOS) {
+    }
 }
